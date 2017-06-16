@@ -38,25 +38,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        Intent notificationIntent;
+        Intent notificationIntent = new Intent(this, StartActivity.class);
         if(StartActivity.isAppRunning){
-            notificationIntent = new Intent(this, StartActivity.class);
+            //Some action
         }else{
-            notificationIntent = new Intent(this, StartActivity.class);
+            //Show notification as usual
         }
 
-        //  notificationIntent.putExtra(Activity_ItemDetail.PRODUCT_ID, remoteMessage.getData().get("product_id"));
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         final PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0 /* Request code */, notificationIntent,
                 PendingIntent.FLAG_ONE_SHOT);
 
+        //You should use an actual ID instead
         int notificationId = new Random().nextInt(60000);
 
-        //For further use
-        String storeId = remoteMessage.getData().get("store_id");
-        String offerId = remoteMessage.getData().get("offer_id");
 
         Bitmap bitmap = getBitmapfromUrl(remoteMessage.getData().get("image-url"));
 
@@ -66,33 +63,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent likePendingIntent = PendingIntent.getService(this,
                 notificationId+1,likeIntent,PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = "channeloneid2";
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-
+        //In this example, the channel id is received from the server with the notification payload.
+        String channelId = remoteMessage.getData().get("channelId");
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            //Not using NotificationCompat yet because the support library isn't updated yet
             Notification notification = new Notification.Builder(this,channelId)
                     .setLargeIcon(bitmap)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(remoteMessage.getData().get("title"))
                     .setStyle(new Notification.BigPictureStyle()
                             .setSummaryText(remoteMessage.getData().get("message"))
-                            .bigPicture(bitmap))/*Notification with Image*/
+                            .bigPicture(bitmap))
                     .setContentText(remoteMessage.getData().get("message"))
                     .setAutoCancel(true)
-                    .setSound(defaultSoundUri)
-                    .addAction(R.drawable.ic_favorite_true,getString(R.string.notification_add_to_cart_button),likePendingIntent)
                     .setContentIntent(pendingIntent)
-
+                    .addAction(R.drawable.ic_favorite_true,
+                            getString(R.string.notification_add_to_cart_button),likePendingIntent)
                     .build();
-            notificationManager.notify(notificationId /* ID of notification */, notification);
-        }else{
 
+            notificationManager.notify(notificationId, notification);
+        } else{
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                     .setLargeIcon(bitmap)
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -103,14 +100,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentText(remoteMessage.getData().get("message"))
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
-                    .addAction(R.drawable.ic_favorite_true,getString(R.string.notification_add_to_cart_button),likePendingIntent)
+                    .addAction(R.drawable.ic_favorite_true,
+                            getString(R.string.notification_add_to_cart_button),likePendingIntent)
                     .setContentIntent(pendingIntent);
-            notificationManager.notify(notificationId /* ID of notification */, notificationBuilder.build());
 
+            notificationManager.notify(notificationId, notificationBuilder.build());
         }
-
-
-
     }
 
     public Bitmap getBitmapfromUrl(String imageUrl) {

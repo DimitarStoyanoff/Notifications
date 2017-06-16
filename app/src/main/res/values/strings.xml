@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Notifications</string>
     <string name="notification_add_to_cart_button">Like</string>
+    <string name="group_name">Group 1</string>
 </resources>
