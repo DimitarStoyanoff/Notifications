@@ -12,6 +12,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -34,6 +36,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String NOTIFICATION_ID_EXTRA = "notificationId";
     private static final String IMAGE_URL_EXTRA = "imageUrl";
+    private static final String ADMIN_CHANNEL_ID ="admin_channel";
+    private NotificationManager notificationManager;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -66,31 +70,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationManager notificationManager =
+        notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //In this example, the channel id is received from the server with the notification payload.
-        String channelId = remoteMessage.getData().get("channelId");
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            //Not using NotificationCompat yet because the support library isn't updated yet
-            Notification notification = new Notification.Builder(this,channelId)
-                    .setLargeIcon(bitmap)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(remoteMessage.getData().get("title"))
-                    .setStyle(new Notification.BigPictureStyle()
-                            .setSummaryText(remoteMessage.getData().get("message"))
-                            .bigPicture(bitmap))
-                    .setContentText(remoteMessage.getData().get("message"))
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .addAction(R.drawable.ic_favorite_true,
-                            getString(R.string.notification_add_to_cart_button),likePendingIntent)
-                    .build();
+            setupChannels();
+        }
 
-            notificationManager.notify(notificationId, notification);
-        } else{
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                     .setLargeIcon(bitmap)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(remoteMessage.getData().get("title"))
@@ -105,7 +93,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent);
 
             notificationManager.notify(notificationId, notificationBuilder.build());
-        }
+
     }
 
     public Bitmap getBitmapfromUrl(String imageUrl) {
@@ -120,6 +108,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void setupChannels(){
+        CharSequence adminChannelName = getString(R.string.notifications_admin_channel_name);
+        String adminChannelDescription = getString(R.string.notifications_admin_channel_description);
+
+        NotificationChannel adminChannel;
+        adminChannel = new NotificationChannel(ADMIN_CHANNEL_ID, adminChannelName, NotificationManager.IMPORTANCE_LOW);
+        adminChannel.setDescription(adminChannelDescription);
+        adminChannel.enableLights(true);
+        adminChannel.setLightColor(Color.RED);
+        adminChannel.enableVibration(true);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(adminChannel);
         }
     }
 }
