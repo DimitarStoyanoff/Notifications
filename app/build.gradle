@@ -20,15 +20,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion", {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
-    compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
-    compile "com.google.firebase:firebase-messaging:$rootProject.ext.gmsVersion"
-    compile "com.google.android.gms:play-services-vision:$rootProject.ext.gmsVersion"
-    compile "com.google.android.gms:play-services-maps:$rootProject.ext.gmsVersion"
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
+
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
+    implementation "com.google.firebase:firebase-messaging:$rootProject.ext.gmsVersion"
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidx"
+    implementation "androidx.core:core-ktx:$rootProject.ext.androidx"
+
 }
 apply plugin: 'com.google.gms.google-services'

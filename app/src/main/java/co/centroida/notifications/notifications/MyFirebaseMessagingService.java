@@ -1,20 +1,22 @@
 package co.centroida.notifications.notifications;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -24,6 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
 
+import co.centroida.notifications.Constants;
 import co.centroida.notifications.R;
 import co.centroida.notifications.StartActivity;
 
@@ -59,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int notificationId = new Random().nextInt(60000);
 
 
-        Bitmap bitmap = getBitmapfromUrl(remoteMessage.getData().get("image-url"));
+        Bitmap bitmap = getBitmapFromUrl(remoteMessage.getData().get("image-url"));
 
         Intent likeIntent = new Intent(this,LikeService.class);
         likeIntent.putExtra(NOTIFICATION_ID_EXTRA,notificationId);
@@ -96,7 +99,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    public Bitmap getBitmapfromUrl(String imageUrl) {
+    @Override
+    public void onNewToken(String token) {
+        Log.d("TAG", "Refreshed token: " + token);
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        preferences.edit().putString(Constants.FIREBASE_TOKEN, token).apply();
+    }
+
+    public Bitmap getBitmapFromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
