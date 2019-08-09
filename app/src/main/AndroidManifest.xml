@@ -29,6 +29,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".notifications.LikeService" />
+
     </application>
 
 </manifest>

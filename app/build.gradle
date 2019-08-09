@@ -1,4 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+androidExtensions {
+    experimental = true
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -17,6 +24,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        disable "ResourceType"
+    }
 }
 
 dependencies {
@@ -30,6 +41,9 @@ dependencies {
     testImplementation "junit:junit:$rootProject.ext.junitVersion"
     implementation "androidx.appcompat:appcompat:$rootProject.ext.androidx"
     implementation "androidx.core:core-ktx:$rootProject.ext.androidx"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rx_android"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rx_java"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.ext.rx_kotlin"
 
 }
 apply plugin: 'com.google.gms.google-services'
