@@ -44,11 +44,22 @@ android {
 }
 
 dependencies {
+    // Androidx
     implementation "androidx.core:core-ktx:$rootProject.ext.androidx"
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintLayout"
+    implementation "com.google.android.material:material:$rootProject.ext.material"
+
+    // Testing
     testImplementation "junit:junit:$rootProject.ext.junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.espresso"
+
+    // Firebase
     implementation platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase")
     implementation "com.google.firebase:firebase-messaging-ktx"
+    implementation "com.google.firebase:firebase-analytics-ktx"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.ext.glide"
 }

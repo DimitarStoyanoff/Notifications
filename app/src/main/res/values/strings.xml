@@ -1,7 +1,15 @@
+<!--
+  ~ Created by Stoyanoff on 14/06/2017.
+  -->
+
 <resources>
     <string name="app_name">Notifications</string>
+    <string name="activity_start_title">Send me a notification!</string>
+
+    <!-- Notifications -->
     <string name="notification_add_to_cart_button">Like</string>
-    <string name="group_name">Group 1</string>
-    <string name="notifications_admin_channel_name">Global channel</string>
-    <string name="notifications_admin_channel_description">Notifications sent from the app admin</string>
+    <string name="notifications_promotions_channel_id" translatable="false">Promotions channel id</string>
+    <string name="notifications_promotions_channel_name">Promotions channel</string>
+    <string name="notifications_promotions_channel_description">We send you our best deals!</string>
+    <!-- End Notifications -->
 </resources>
