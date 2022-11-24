@@ -10,6 +10,9 @@ import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Entry point activity.
+ */
 class StartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,15 +45,5 @@ class StartActivity : AppCompatActivity() {
             notificationManager.createNotificationChannel(notificationChannel2)
 
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        isAppRunning = false
-    }
-
-    companion object {
-
-        var isAppRunning: Boolean = false
     }
 }

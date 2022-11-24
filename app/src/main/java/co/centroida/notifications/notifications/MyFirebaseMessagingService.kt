@@ -31,21 +31,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private var notificationManager: NotificationManager? = null
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
         val notificationIntent = Intent(this, StartActivity::class.java)
 
-        if (StartActivity.isAppRunning) {
-            //Some action
-        } else {
-            //Show notification as usual
-        }
-
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        val pendingIntent = PendingIntent.getActivity(this,
-                0 /* Request code */, notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0 /* Request code */, notificationIntent,
+            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         //You should use an actual ID instead
         val notificationId = Random().nextInt(60000)
@@ -55,8 +51,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val likeIntent = Intent(this, LikeService::class.java)
             likeIntent.putExtra(NOTIFICATION_ID_EXTRA, notificationId)
             likeIntent.putExtra(IMAGE_URL_EXTRA, remoteMessage.data["image-url"])
-            val likePendingIntent = PendingIntent.getService(this,
-                    notificationId + 1, likeIntent, PendingIntent.FLAG_ONE_SHOT)
+            val likePendingIntent = PendingIntent.getService(
+                this,
+                notificationId + 1,
+                likeIntent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
+            )
 
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
@@ -84,7 +84,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    override fun onNewToken(token: String?) {
+    override fun onNewToken(token: String) {
         Log.d("TAG", "Refreshed token: $token")
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferences.edit().putString(Constants.FIREBASE_TOKEN, token).apply()

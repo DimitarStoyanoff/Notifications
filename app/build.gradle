@@ -1,15 +1,20 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
-androidExtensions {
-    experimental = true
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "co.centroida.notifications"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -19,10 +24,18 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     lintOptions {
@@ -31,19 +44,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintLayoutVersion"
-    implementation "com.google.firebase:firebase-messaging:$rootProject.ext.gmsVersion"
-    testImplementation "junit:junit:$rootProject.ext.junitVersion"
-    implementation "androidx.appcompat:appcompat:$rootProject.ext.androidx"
     implementation "androidx.core:core-ktx:$rootProject.ext.androidx"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rx_android"
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rx_java"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rootProject.ext.rx_kotlin"
-
+    implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintLayout"
+    testImplementation "junit:junit:$rootProject.ext.junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.ext.espresso"
+    implementation platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase")
+    implementation "com.google.firebase:firebase-messaging-ktx"
 }
-apply plugin: 'com.google.gms.google-services'

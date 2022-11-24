@@ -14,7 +14,6 @@ class LikeService : Service() {
     }
 
     companion object {
-
         private const val NOTIFICATION_ID_EXTRA = "notificationId"
         private const val IMAGE_URL_EXTRA = "imageUrl"
     }

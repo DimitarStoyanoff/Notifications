@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Notifications.iml" filepath="$PROJECT_DIR$/Notifications.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Notifications.iml" filepath="$PROJECT_DIR$/Notifications.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Notifications.iml" filepath="$PROJECT_DIR$/.idea/modules/Notifications.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Notifications.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Notifications.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Notifications.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Notifications.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Notifications.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Notifications.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Notifications.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Notifications.app.unitTest.iml" />
     </modules>
   </component>
 </project>
