@@ -6,28 +6,25 @@ package co.centroida.notifications.notifications
 
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-
 import androidx.core.app.NotificationCompat
-
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
-
 import co.centroida.notifications.R
 import co.centroida.notifications.StartActivity
 import com.bumptech.glide.Glide
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.milliseconds
 
 /** Displayed notification ID. */
 internal const val NOTIFICATION_ID = 0
@@ -73,7 +70,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         imageUrl: Uri?
     ) {
         val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         // If notifications are not enabled, our work here is done.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !notificationManager.areNotificationsEnabled()) {
             return
@@ -158,7 +155,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setStyle(
                 NotificationCompat.BigPictureStyle()
                     .bigPicture(bitmap)
-                    .bigLargeIcon(null)
             )
 
     /**
@@ -168,14 +164,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      * @return downloaded [Bitmap] if successful.
      */
     private suspend fun fetchNotificationImage(url: String): Bitmap? =
-        withTimeoutOrNull(NOTIFICATION_IMAGE_DOWNLOAD_TIMEOUT) {
+        withTimeoutOrNull(NOTIFICATION_IMAGE_DOWNLOAD_TIMEOUT.milliseconds) {
             withContext(Dispatchers.IO) {
                 try {
                     Glide.with(applicationContext)
                         .asBitmap()
                         .load(url)
                         .submit().get()
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     // Catch an exception if the downloading fails, e.g. when the url is invalid.
                     null
                 }

@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
     id 'com.google.gms.google-services'
 }
 
@@ -13,12 +14,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion 37
 
     defaultConfig {
         applicationId "co.centroida.notifications"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion 23
+        targetSdkVersion 37
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,26 +27,31 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    kotlin {
+        compilerOptions {
+            languageVersion = KotlinVersion.KOTLIN_2_0
+            // Optional: Set jvmTarget
+             jvmTarget = JvmTarget.JVM_1_8
+        }
     }
 
-    lintOptions {
-        disable "ResourceType"
+    namespace 'co.centroida.notifications'
+    lint {
+        disable 'ResourceType'
     }
 }
 
 dependencies {
     // Androidx
-    implementation "androidx.core:core-ktx:$rootProject.ext.androidx"
+    implementation "androidx.core:core:$rootProject.ext.androidx"
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintLayout"
     implementation "com.google.android.material:material:$rootProject.ext.material"
@@ -57,12 +63,12 @@ dependencies {
 
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:$rootProject.ext.firebase")
-    implementation "com.google.firebase:firebase-messaging-ktx"
-    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-messaging"
+    implementation "com.google.firebase:firebase-analytics"
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide"
-    kapt "com.github.bumptech.glide:compiler:$rootProject.ext.glide"
+    ksp "com.github.bumptech.glide:ksp:$rootProject.ext.glide"
 
     // LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leakCanary"
